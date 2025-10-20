@@ -25,6 +25,22 @@ namespace Infrastructure.Services
             _jwtExpireMinutes = jwtExpireMinutes;
         }
 
+        public async Task<UserResponseDto?> GetCurrentUserAsync(int userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null) return null;
+
+            return new UserResponseDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Role = user.Role?.Name ?? "User"
+            };
+        }
+
+
+
         public async Task<UserCreatedDto?> RegisterAsync(UserRegisterDto dto)
         {
             if (!IsValidEmail(dto.Email))

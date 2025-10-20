@@ -1,5 +1,8 @@
-﻿using Core.DTOs;
+﻿using System.Security.Claims;
+using Core.DTOs;
+using System.IdentityModel.Tokens.Jwt;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -15,7 +18,29 @@ namespace API.Controllers
             _userService = userService;
         }
 
-        [HttpPost("register")]
+
+    [Authorize] 
+    [HttpGet("me")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+
+            if (userIdClaim == null)
+                return Unauthorized(new { message = "No se pudo obtener el ID del usuario." });
+
+            if (!int.TryParse(userIdClaim, out var userId))
+                return BadRequest(new { message = "ID de usuario inválido." });
+
+            var user = await _userService.GetCurrentUserAsync(userId);
+            if (user == null)
+            return NotFound(new { message = "Usuario no encontrado." });
+
+        return Ok(user);
+    }
+
+
+    [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDto dto)
         {
             var user = await _userService.RegisterAsync(dto);
