@@ -1,0 +1,115 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DB25467D-AAFD-40F9-8C96-CC01039A4061}|Core\\Core.csproj|c:\\users\\yarie\\desktop\\proyect_sx\\backend\\core\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB25467D-AAFD-40F9-8C96-CC01039A4061}|Core\\Core.csproj|solutionrelative:core\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{91CA6D5B-924A-451C-960F-15B07969AE4C}|Application\\Application.csproj|c:\\users\\yarie\\desktop\\proyect_sx\\backend\\application\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{91CA6D5B-924A-451C-960F-15B07969AE4C}|Application\\Application.csproj|solutionrelative:application\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AF1FA44-8342-4A5B-AD23-EFD8E7807018}|WebAPI\\WebAPI.csproj|c:\\users\\yarie\\desktop\\proyect_sx\\backend\\webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AF1FA44-8342-4A5B-AD23-EFD8E7807018}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{91CA6D5B-924A-451C-960F-15B07969AE4C}|Application\\Application.csproj|c:\\users\\yarie\\desktop\\proyect_sx\\backend\\application\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{91CA6D5B-924A-451C-960F-15B07969AE4C}|Application\\Application.csproj|solutionrelative:application\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{91CA6D5B-924A-451C-960F-15B07969AE4C}|Application\\Application.csproj|c:\\users\\yarie\\desktop\\proyect_sx\\backend\\application\\interfaces\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{91CA6D5B-924A-451C-960F-15B07969AE4C}|Application\\Application.csproj|solutionrelative:application\\interfaces\\iorderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 140,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Order.cs",
+              "DocumentMoniker": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\Core\\Entities\\Order.cs",
+              "RelativeDocumentMoniker": "Core\\Entities\\Order.cs",
+              "ToolTip": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\Core\\Entities\\Order.cs",
+              "RelativeToolTip": "Core\\Entities\\Order.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAxwAUAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T03:21:04.324Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\WebAPI\\Program.cs",
+              "RelativeDocumentMoniker": "WebAPI\\Program.cs",
+              "ToolTip": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\WebAPI\\Program.cs",
+              "RelativeToolTip": "WebAPI\\Program.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAowC0AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T03:16:35.181Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IOrderService.cs",
+              "DocumentMoniker": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\Application\\Interfaces\\IOrderService.cs",
+              "RelativeDocumentMoniker": "Application\\Interfaces\\IOrderService.cs",
+              "ToolTip": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\Application\\Interfaces\\IOrderService.cs",
+              "RelativeToolTip": "Application\\Interfaces\\IOrderService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T03:15:51.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "OrderService.cs",
+              "DocumentMoniker": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\Application\\Services\\OrderService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\OrderService.cs",
+              "ToolTip": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\Application\\Services\\OrderService.cs",
+              "RelativeToolTip": "Application\\Services\\OrderService.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAiwCIAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T03:15:43.52Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\Application\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\UserService.cs",
+              "ToolTip": "C:\\Users\\yarie\\Desktop\\Proyect_SX\\backend\\Application\\Services\\UserService.cs",
+              "RelativeToolTip": "Application\\Services\\UserService.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAQwCgAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T02:32:16.866Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 109,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
