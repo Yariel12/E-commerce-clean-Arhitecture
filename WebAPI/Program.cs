@@ -91,18 +91,18 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Forzar app a escuchar en Docker en todas las interfaces
-app.Urls.Add("http://0.0.0.0:8080");
-
-// Swagger siempre disponible
+// Swagger
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "E-commerce API V1");
 });
 
-// HTTPS redirection comentada para Docker
-// app.UseHttpsRedirection();
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/swagger");
+    return Task.CompletedTask;
+});
 
 app.UseCors("AllowFrontend");
 

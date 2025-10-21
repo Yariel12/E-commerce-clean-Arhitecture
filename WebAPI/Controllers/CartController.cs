@@ -3,11 +3,13 @@ using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/cart")]
+    [Route("api/[controller]")]
+    [Authorize]
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
@@ -17,51 +19,82 @@ namespace WebAPI.Controllers
             _cartService = cartService;
         }
 
-        // GET: api/cart
-        [Authorize]
+        // ✅ GET: api/cart
         [HttpGet]
         public async Task<ActionResult<Cart>> GetCart()
         {
-            int userId = GetCurrentUserId(); 
+            int userId = GetCurrentUserId();
             var cart = await _cartService.GetCartAsync(userId);
+
+            if (cart == null)
+                return NotFound(new { message = "El carrito está vacío o no existe." });
+
             return Ok(cart);
         }
 
-        [Authorize]
+        // ✅ POST: api/cart/add
         [HttpPost("add")]
-        public async Task<ActionResult> AddToCart([FromBody] AddToCartRequest request)
+        public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request)
         {
-            int userId = GetCurrentUserId();
-            await _cartService.AddToCartAsync(userId, request.ProductId, request.Quantity);
-            return NoContent();
+            try
+            {
+                int userId = GetCurrentUserId();
+                await _cartService.AddToCartAsync(userId, request.ProductId, request.Quantity);
+                return Ok(new { message = "✅ Producto agregado al carrito correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
-        [Authorize]
+        // ✅ POST: api/cart/remove
         [HttpPost("remove")]
-        public async Task<ActionResult> RemoveFromCart([FromBody] RemoveFromCartRequest request)
+        public async Task<IActionResult> RemoveFromCart([FromBody] RemoveFromCartRequest request)
         {
-            int userId = GetCurrentUserId();
-            await _cartService.RemoveFromCartAsync(userId, request.ProductId);
-            return NoContent();
+            try
+            {
+                int userId = GetCurrentUserId();
+                await _cartService.RemoveFromCartAsync(userId, request.ProductId);
+                return Ok(new { message = "🗑 Producto eliminado del carrito." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
+        // ✅ POST: api/cart/checkout
         [HttpPost("checkout")]
-        public async Task<ActionResult> Checkout()
+        public async Task<IActionResult> Checkout()
         {
-            int userId = GetCurrentUserId();
-            await _cartService.CheckoutAsync(userId);
-            return NoContent();
+            try
+            {
+                int userId = GetCurrentUserId();
+                await _cartService.CheckoutAsync(userId);
+                return Ok(new { message = "💰 Compra finalizada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
+        // 🔥 Obtiene el userId del token JWT
         private int GetCurrentUserId()
         {
-            // Aquí depende de tu auth (JWT, Identity, etc.)
-            // Por ejemplo, si tienes JWT: int.Parse(User.FindFirst("id").Value)
-            return 1; // temporal para pruebas
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst("id")?.Value
+                              ?? User.FindFirst("sub")?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim))
+                throw new Exception("No se pudo obtener el ID del usuario autenticado.");
+
+            return int.Parse(userIdClaim);
         }
     }
 
-    // DTOs para requests
+    // DTOs
     public class AddToCartRequest
     {
         public int ProductId { get; set; }

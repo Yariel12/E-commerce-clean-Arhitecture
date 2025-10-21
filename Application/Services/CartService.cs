@@ -17,7 +17,20 @@ namespace Application.Services
         public async Task<Cart> GetCartAsync(int userId)
         {
             var cart = await _cartRepository.GetCartByUserIdAsync(userId);
-            return cart ?? new Cart { UserId = userId, Items = new List<CartItem>() };
+
+            // Si no existe el carrito, lo creamos
+            if (cart == null)
+            {
+                cart = new Cart
+                {
+                    UserId = userId,
+                    Items = new List<CartItem>()
+                };
+
+                await _cartRepository.CreateCartAsync(cart);
+            }
+
+            return cart;
         }
 
         public async Task AddToCartAsync(int userId, int productId, int quantity)
@@ -29,7 +42,7 @@ namespace Application.Services
                 throw new Exception("Producto no encontrado.");
 
             if (product.Stock < quantity)
-                throw new Exception("No hay suficiente stock.");
+                throw new Exception("No hay suficiente stock disponible.");
 
             var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
 
@@ -43,7 +56,7 @@ namespace Application.Services
                 {
                     ProductId = productId,
                     Quantity = quantity,
-                    Product = product 
+                    Product = product
                 });
             }
 
@@ -55,11 +68,11 @@ namespace Application.Services
             var cart = await GetCartAsync(userId);
             var item = cart.Items.FirstOrDefault(i => i.ProductId == productId);
 
-            if (item != null)
-            {
-                cart.Items.Remove(item);
-                await _cartRepository.UpdateCartAsync(userId, cart.Items);
-            }
+            if (item == null)
+                throw new Exception("El producto no está en el carrito.");
+
+            cart.Items.Remove(item);
+            await _cartRepository.UpdateCartAsync(userId, cart.Items);
         }
 
         public async Task CheckoutAsync(int userId)

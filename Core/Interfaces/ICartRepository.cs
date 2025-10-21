@@ -8,5 +8,6 @@ namespace Core.Interfaces
         Task AddToCartAsync(int userId, int productId, int quantity);
         Task UpdateCartAsync(int userId, ICollection<CartItem> items); 
         Task ClearCartAsync(int userId);
+        Task CreateCartAsync(Cart cart);
     }
 }

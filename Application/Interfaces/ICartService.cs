@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Interfaces
 {
@@ -7,6 +8,8 @@ namespace Core.Interfaces
         Task<Cart> GetCartAsync(int userId);
         Task AddToCartAsync(int userId, int productId, int quantity);
         Task RemoveFromCartAsync(int userId, int productId);
-        Task CheckoutAsync(int userId);  
+        Task CheckoutAsync(int userId);
+
+
     }
 }

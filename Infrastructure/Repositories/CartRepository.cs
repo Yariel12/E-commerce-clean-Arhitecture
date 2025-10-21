@@ -37,7 +37,6 @@ namespace Infrastructure.Repositories
                 _context.Carts.Add(cart);
             }
 
-            // Si ya existe el producto en el carrito, aumenta la cantidad
             var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
             if (existingItem != null)
             {
@@ -58,10 +57,28 @@ namespace Infrastructure.Repositories
         public async Task UpdateCartAsync(int userId, ICollection<CartItem> items)
         {
             var cart = await GetCartByUserIdAsync(userId);
-            if (cart == null)
-                throw new Exception("Carrito no encontrado.");
 
-            cart.Items = items.ToList();
+            // 🔥 Si no existe, creamos uno nuevo automáticamente
+            if (cart == null)
+            {
+                cart = new Cart
+                {
+                    UserId = userId,
+                    Items = items.ToList()
+                };
+
+                _context.Carts.Add(cart);
+            }
+            else
+            {
+                // Limpiamos los items antiguos para evitar duplicados
+                _context.CartItems.RemoveRange(cart.Items);
+
+                // Agregamos los nuevos
+                cart.Items = items.ToList();
+                _context.Carts.Update(cart);
+            }
+
             await _context.SaveChangesAsync();
         }
 
@@ -74,5 +91,12 @@ namespace Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task CreateCartAsync(Cart cart)
+        {
+            _context.Carts.Add(cart);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
