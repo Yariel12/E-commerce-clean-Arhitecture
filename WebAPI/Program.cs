@@ -11,18 +11,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- Add Controllers & Swagger ---
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// --- JWT settings ---
+// --- 🔐 JWT settings ---
 var jwtSection = builder.Configuration.GetSection("Jwt");
 string jwtSecret = jwtSection.GetValue<string>("Secret")
     ?? throw new InvalidOperationException("Jwt:Secret is not configured");
 int jwtExpireMinutes = jwtSection.GetValue<int>("ExpireMinutes");
 
-// --- Database connection ---
+// --- 🗄️ Database connection ---
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))
 {
@@ -31,7 +26,6 @@ if (string.IsNullOrWhiteSpace(connectionString))
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// --- Dependency Injection ---
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -40,8 +34,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-
-
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 // Services (Application layer)
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -50,8 +43,7 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-
-
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddScoped<UserService>(provider =>
 {
@@ -60,11 +52,11 @@ builder.Services.AddScoped<UserService>(provider =>
     return new UserService(userRepo, roleRepo, jwtSecret, jwtExpireMinutes);
 });
 
-
+// --- 🗺️ AutoMapper ---
 builder.Services.AddAutoMapper(cfg => { }, typeof(Application.Mapping.AutoMapperProfile).Assembly);
 
+// --- 🔒 JWT Authentication ---
 var key = Encoding.UTF8.GetBytes(jwtSecret);
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -82,8 +74,28 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// --- 🌍 CORS Config ---
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // 👈 Tu frontend React
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
+// --- ⚙️ Controllers & Swagger ---
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// --- 🚀 Build app ---
 var app = builder.Build();
 
+// --- 🧪 Swagger en desarrollo ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -92,6 +104,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// --- 🔥 Activar CORS antes de auth ---
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
