@@ -11,18 +11,15 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 🔐 JWT settings ---
+// JWT config
 var jwtSection = builder.Configuration.GetSection("Jwt");
 string jwtSecret = jwtSection.GetValue<string>("Secret")
     ?? throw new InvalidOperationException("Jwt:Secret is not configured");
 int jwtExpireMinutes = jwtSection.GetValue<int>("ExpireMinutes");
 
-// --- 🗄️ Database connection ---
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (string.IsNullOrWhiteSpace(connectionString))
-{
-    throw new InvalidOperationException("Connection string 'DefaultConnection' not configured in appsettings.json");
-}
+// DB config
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not configured");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -36,7 +33,7 @@ builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 
-// Services (Application layer)
+// Services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
@@ -52,10 +49,10 @@ builder.Services.AddScoped<UserService>(provider =>
     return new UserService(userRepo, roleRepo, jwtSecret, jwtExpireMinutes);
 });
 
-// --- 🗺️ AutoMapper ---
+// AutoMapper
 builder.Services.AddAutoMapper(cfg => { }, typeof(Application.Mapping.AutoMapperProfile).Assembly);
 
-// --- 🔒 JWT Authentication ---
+// JWT Authentication
 var key = Encoding.UTF8.GetBytes(jwtSecret);
 builder.Services.AddAuthentication(options =>
 {
@@ -74,37 +71,39 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// --- 🌍 CORS Config ---
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // 👈 Tu frontend React
+            policy.WithOrigins("http://localhost:5173") // React frontend
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
         });
 });
 
-// --- ⚙️ Controllers & Swagger ---
+// Controllers & Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// --- 🚀 Build app ---
 var app = builder.Build();
 
-// --- 🧪 Swagger en desarrollo ---
-if (app.Environment.IsDevelopment())
+// Forzar app a escuchar en Docker en todas las interfaces
+app.Urls.Add("http://0.0.0.0:8080");
+
+// Swagger siempre disponible
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "E-commerce API V1");
+});
 
-app.UseHttpsRedirection();
+// HTTPS redirection comentada para Docker
+// app.UseHttpsRedirection();
 
-// --- 🔥 Activar CORS antes de auth ---
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
