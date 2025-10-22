@@ -56,9 +56,10 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateCartAsync(int userId, ICollection<CartItem> items)
         {
-            var cart = await GetCartByUserIdAsync(userId);
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            // 🔥 Si no existe, creamos uno nuevo automáticamente
             if (cart == null)
             {
                 cart = new Cart
@@ -66,21 +67,42 @@ namespace Infrastructure.Repositories
                     UserId = userId,
                     Items = items.ToList()
                 };
-
                 _context.Carts.Add(cart);
             }
             else
             {
-                // Limpiamos los items antiguos para evitar duplicados
-                _context.CartItems.RemoveRange(cart.Items);
+                var existingItems = cart.Items.ToList();
+                foreach (var existingItem in existingItems)
+                {
+                    if (!items.Any(i => i.ProductId == existingItem.ProductId))
+                    {
+                        _context.CartItems.Remove(existingItem);
+                    }
+                }
 
-                // Agregamos los nuevos
-                cart.Items = items.ToList();
+                foreach (var newItem in items)
+                {
+                    var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == newItem.ProductId);
+                    if (existingItem != null)
+                    {
+                        existingItem.Quantity = newItem.Quantity;
+                    }
+                    else
+                    {
+                        cart.Items.Add(new CartItem
+                        {
+                            ProductId = newItem.ProductId,
+                            Quantity = newItem.Quantity
+                        });
+                    }
+                }
+
                 _context.Carts.Update(cart);
             }
 
             await _context.SaveChangesAsync();
         }
+
 
         public async Task ClearCartAsync(int userId)
         {

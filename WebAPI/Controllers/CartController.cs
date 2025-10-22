@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
             {
                 int userId = GetCurrentUserId();
                 await _cartService.AddToCartAsync(userId, request.ProductId, request.Quantity);
-                return Ok(new { message = "✅ Producto agregado al carrito correctamente." });
+                return Ok(new { message = "Producto agregado al carrito correctamente." });
             }
             catch (Exception ex)
             {
@@ -80,7 +80,6 @@ namespace WebAPI.Controllers
             }
         }
 
-        // 🔥 Obtiene el userId del token JWT
         private int GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -94,7 +93,6 @@ namespace WebAPI.Controllers
         }
     }
 
-    // DTOs
     public class AddToCartRequest
     {
         public int ProductId { get; set; }

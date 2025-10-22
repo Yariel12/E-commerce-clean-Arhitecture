@@ -18,7 +18,6 @@ namespace Application.Services
         {
             var cart = await _cartRepository.GetCartByUserIdAsync(userId);
 
-            // Si no existe el carrito, lo creamos
             if (cart == null)
             {
                 cart = new Cart
