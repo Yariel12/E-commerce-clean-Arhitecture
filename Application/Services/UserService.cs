@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using Core.DTOs;
 using Core.Entities;
@@ -38,8 +37,6 @@ namespace Infrastructure.Services
                 Role = user.Role?.Name ?? "User"
             };
         }
-
-
 
         public async Task<UserCreatedDto?> RegisterAsync(UserRegisterDto dto)
         {
@@ -113,19 +110,15 @@ namespace Infrastructure.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role?.Name ?? "User") 
+                new Claim(ClaimTypes.Role, user.Role?.Name ?? "User")
             };
 
-            byte[] keyBytes = Encoding.UTF8.GetBytes(_jwtSecret ?? string.Empty);
-            if (keyBytes.Length < 32)
-            {
-                keyBytes = SHA256.HashData(keyBytes);
-            }
-
-            var key = new SymmetricSecurityKey(keyBytes);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
+                issuer: "ProyectSX",
+                audience: "ProyectSX",
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(_jwtExpireMinutes),
                 signingCredentials: creds

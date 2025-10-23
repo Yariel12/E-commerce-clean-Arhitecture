@@ -72,7 +72,7 @@ namespace WebAPI.Controllers
             {
                 int userId = GetCurrentUserId();
                 await _cartService.CheckoutAsync(userId);
-                return Ok(new { message = "💰 Compra finalizada correctamente." });
+                return Ok(new { message = "Compra finalizada correctamente." });
             }
             catch (Exception ex)
             {
