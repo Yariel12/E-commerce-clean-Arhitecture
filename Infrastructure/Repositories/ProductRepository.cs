@@ -37,9 +37,22 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateAsync(Product product)
         {
-            _context.Products.Update(product);
+            var existingProduct = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == product.Id);
+
+            if (existingProduct == null)
+                throw new Exception("Producto no encontrado");
+
+            existingProduct.Name = product.Name;
+            existingProduct.Price = product.Price;
+            existingProduct.Stock = product.Stock;
+            existingProduct.Description = product.Description;
+            existingProduct.CategoryId = product.CategoryId;
+            existingProduct.ImageUrl = product.ImageUrl;
+
             await _context.SaveChangesAsync();
         }
+
 
         public async Task DeleteAsync(int id)
         {
@@ -56,5 +69,15 @@ namespace Infrastructure.Repositories
                 .Where(expression)
                 .ToListAsync();
         }
+        public async Task<IQueryable<Product>> GetAllAsQueryableAsync()
+        {
+            return await Task.FromResult(
+                _context.Products
+                .Include(p => p.Category)
+                .AsQueryable()
+            );
+        }
+
+
     }
 }

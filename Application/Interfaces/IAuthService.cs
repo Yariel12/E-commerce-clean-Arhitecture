@@ -1,5 +1,5 @@
-﻿using Core.DTOs;
-using System.Threading.Tasks;
+﻿using Application.DTOs;
+
 
 namespace Application.Interfaces
 {

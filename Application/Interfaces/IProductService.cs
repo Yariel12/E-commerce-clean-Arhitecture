@@ -9,5 +9,7 @@ namespace Application.Interfaces
         Task AddAsync(ProductDto productDto);
         Task UpdateAsync(ProductDto productDto);
         Task DeleteAsync(int id);
+        Task<PagedResult<ProductDto>> GetPagedAsync(int page, int limit, string? search);
+
     }
 }

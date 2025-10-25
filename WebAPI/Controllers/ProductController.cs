@@ -18,24 +18,19 @@ namespace WebAPI.Controllers
             _categoryService = categoryService;
         }
 
+
+
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
+        public async Task<ActionResult> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int limit = 10,
+            [FromQuery] string? search = null)
         {
-            var products = await _productService.GetAllAsync();
-            return Ok(products);
+            var result = await _productService.GetPagedAsync(page, limit, search);
+            return Ok(result);
         }
 
-        [AllowAnonymous]
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<ProductDto>> GetById(int id)
-        {
-            var product = await _productService.GetByIdAsync(id);
-            if (product == null)
-                return NotFound(new { message = "Producto no encontrado" });
-
-            return Ok(product);
-        }
 
 
         [Authorize(Roles = "Admin,Seller")]
@@ -57,7 +52,6 @@ namespace WebAPI.Controllers
             return Ok(new { message = "Producto agregado correctamente." });
         }
 
-        // 🔐 Solo Admin puede actualizar productos
         [Authorize(Roles = "Admin,Seller")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Update(int id, [FromBody] ProductDto productDto)

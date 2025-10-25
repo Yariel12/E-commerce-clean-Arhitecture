@@ -2,7 +2,7 @@
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
-using Core.DTOs;
+using Application.DTOs;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.IdentityModel.Tokens;

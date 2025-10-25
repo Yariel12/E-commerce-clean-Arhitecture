@@ -12,5 +12,8 @@ namespace Core.Interfaces
         Task DeleteAsync(int id);
 
         Task<IEnumerable<Product>> FindByConditionAsync(Expression<Func<Product, bool>> expression);
+
+        Task<IQueryable<Product>> GetAllAsQueryableAsync();
+
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces;
-using Core.DTOs;
+using Application.DTOs;
 using Core.Entities;
 using Core.Interfaces;
 using Google.Apis.Auth;

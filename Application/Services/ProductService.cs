@@ -108,5 +108,39 @@ namespace Application.Services
                 throw new ApplicationException("Error al eliminar el producto.", ex);
             }
         }
+
+        public async Task<PagedResult<ProductDto>> GetPagedAsync(int page, int limit, string? search)
+        {
+            try
+            {
+                var query = await _productRepository.GetAllAsQueryableAsync();
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+                }
+
+                var total = query.Count();
+
+                var items = query
+                    .OrderByDescending(p => p.Id)
+                    .Skip((page - 1) * limit)
+                    .Take(limit)
+                    .ToList();
+
+                return new PagedResult<ProductDto>
+                {
+                    Data = _mapper.Map<IEnumerable<ProductDto>>(items),
+                    Total = total,
+                    Page = page,
+                    Limit = limit
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al obtener los productos paginados.", ex);
+            }
+        }
+
     }
 }

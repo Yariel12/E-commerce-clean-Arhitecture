@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using Core.DTOs;
+using Application.DTOs;
 using System.IdentityModel.Tokens.Jwt;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
