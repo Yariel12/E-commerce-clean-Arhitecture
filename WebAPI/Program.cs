@@ -84,11 +84,10 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(key),
-        ClockSkew = TimeSpan.Zero // Elimina el margen de 5 minutos por defecto
+        ClockSkew = TimeSpan.Zero 
     };
 });
 
-// ===== CORS =====
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
@@ -101,14 +100,27 @@ builder.Services.AddCors(options =>
         });
 });
 
-// ===== CONTROLLERS & SWAGGER =====
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// ===== SWAGGER =====
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        context.Database.Migrate();
+        Console.WriteLine("✅ Migraciones aplicadas exitosamente");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error aplicando migraciones: {ex.Message}");
+    }
+}
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
