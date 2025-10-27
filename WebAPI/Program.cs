@@ -11,7 +11,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ===== JWT CONFIG =====
 var jwtSection = builder.Configuration.GetSection("Jwt");
 string jwtSecret = jwtSection.GetValue<string>("Key")
     ?? throw new InvalidOperationException("Jwt:Key is not configured");
@@ -21,13 +20,11 @@ string jwtAudience = jwtSection.GetValue<string>("Audience")
     ?? throw new InvalidOperationException("Jwt:Audience is not configured");
 int jwtExpireMinutes = jwtSection.GetValue<int>("ExpireMinutes");
 
-// Validar que la clave tenga al menos 32 caracteres (256 bits)
 if (jwtSecret.Length < 32)
 {
     throw new InvalidOperationException($"Jwt:Key must be at least 32 characters. Current length: {jwtSecret.Length}");
 }
 
-// ===== DATABASE CONFIG =====
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not configured");
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -52,10 +49,8 @@ builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICartService, CartService>();
 
-// AuthService para login normal y Google
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// Opcional: UserService con JWT (si lo usas)
 builder.Services.AddScoped<UserService>(provider =>
 {
     var userRepo = provider.GetRequiredService<IUserRepository>();
@@ -63,10 +58,8 @@ builder.Services.AddScoped<UserService>(provider =>
     return new UserService(userRepo, roleRepo, jwtSecret, jwtExpireMinutes);
 });
 
-// ===== AUTOMAPPER =====
 builder.Services.AddAutoMapper(cfg => { }, typeof(Application.Mapping.AutoMapperProfile).Assembly);
 
-// ===== JWT AUTHENTICATION =====
 var key = Encoding.UTF8.GetBytes(jwtSecret);
 builder.Services.AddAuthentication(options =>
 {

@@ -28,7 +28,6 @@ namespace Application.Services
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
 
-            // ✅ Leer desde appsettings.json
             _jwtSecret = configuration["Jwt:Key"]
                 ?? throw new InvalidOperationException("Jwt:Key not configured");
             _jwtIssuer = configuration["Jwt:Issuer"]

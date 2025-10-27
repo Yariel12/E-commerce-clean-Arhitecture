@@ -36,13 +36,11 @@ namespace Application.Services
 
         public async Task AddAsync(OrderDto orderDto)
         {
-            // 🔹 Mapear el DTO a la entidad Order
             var order = _mapper.Map<Order>(orderDto);
             order.OrderDate = DateTime.UtcNow;
 
             decimal totalAmount = 0;
 
-            // 🔹 Validar y completar los datos de los productos
             var cleanItems = new List<OrderItem>();
             foreach (var item in order.OrderItems)
             {

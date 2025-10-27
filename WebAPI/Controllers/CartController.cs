@@ -19,7 +19,6 @@ namespace WebAPI.Controllers
             _cartService = cartService;
         }
 
-        // ✅ GET: api/cart
         [HttpGet]
         public async Task<ActionResult<Cart>> GetCart()
         {
@@ -32,7 +31,6 @@ namespace WebAPI.Controllers
             return Ok(cart);
         }
 
-        // ✅ POST: api/cart/add
         [HttpPost("add")]
         public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request)
         {
@@ -48,7 +46,6 @@ namespace WebAPI.Controllers
             }
         }
 
-        // ✅ POST: api/cart/remove
         [HttpPost("remove")]
         public async Task<IActionResult> RemoveFromCart([FromBody] RemoveFromCartRequest request)
         {
@@ -64,7 +61,6 @@ namespace WebAPI.Controllers
             }
         }
 
-        // ✅ POST: api/cart/checkout
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout()
         {
